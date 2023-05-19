@@ -10,11 +10,26 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Watch
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+
+enum class BottomNavigationItem(val route: String, val icon: ImageVector, val title: String) {
+    Search("search", Icons.Default.Search, "검색"),
+    Watch("watch", Icons.Default.Watch, "시계 보기"),
+    MyPage("mypage", Icons.Default.Person, "마이페이지")
+}
+
 
 class MainActivity : ComponentActivity() {
 
@@ -45,6 +60,30 @@ fun MyApp(content: @Composable () -> Unit) {
             background = Color.White,
             onBackground = Color.Black
         )
+    }
+
+    val items = listOf(
+        BottomNavigationItem.Search,
+        BottomNavigationItem.Watch,
+        BottomNavigationItem.MyPage
+    )
+    var selectedItem by remember { mutableStateOf(BottomNavigationItem.Search) }
+
+    Scaffold(
+        bottomBar = {
+            BottomNavigation {
+                items.forEach { item ->
+                    BottomNavigationItem(
+                        icon = { Icon(item.icon, contentDescription = null) },
+                        label = { Text(item.title) },
+                        selected = selectedItem == item,
+                        onClick = { selectedItem = item }
+                    )
+                }
+            }
+        }
+    ) {
+        //
     }
 
     MaterialTheme(colors = colors) {
