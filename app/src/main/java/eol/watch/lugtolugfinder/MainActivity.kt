@@ -5,34 +5,112 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.material.darkColors
-import androidx.compose.material.lightColors
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            Greeting("Android")
+            MyApp {
+                Greeting("머티리얼 디자인3!")
+            }
+        }
+    }
+}
+
+@Composable
+fun MyApp(content: @Composable () -> Unit) {
+    val colors = if (isSystemInDarkTheme()) {
+        Log.d("checkDarkMode","다크 모드 확인...")
+        darkColors(
+            primary = Color.Gray,
+            onPrimary = Color.White,
+            background = Color.Black,
+            onBackground = Color.White
+        )
+    } else {
+        lightColors(
+            primary = Color.White,
+            onPrimary = Color.Black,
+            background = Color.White,
+            onBackground = Color.Black
+        )
+    }
+
+    MaterialTheme(colors = colors) {
+        Surface(color = MaterialTheme.colors.background) {
+            content()
         }
     }
 }
 
 @Composable
 fun Greeting(name: String) {
-    val colors = if (isSystemInDarkTheme()) {
-        Log.d("checkDarkMode","다크 모드 확인...")
-        darkColors(primary = Color.Black, onPrimary = Color.White)
-    } else {
-        lightColors(primary = Color.White, onPrimary = Color.Black)
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text(text = "안뇽~ $name!") },
+                actions = {
+                    IconButton(onClick = { /* TODO: Handle click */ }) {
+                        Icon(Icons.Filled.Favorite, contentDescription = null)
+                    }
+                }
+            )
+        },
+        floatingActionButton = {
+            ExtendedFloatingActionButton(
+                text = { Text("Extended FAB") },
+                onClick = { /* TODO: Handle click */ }
+            )
+        }
+    ) { innerPadding ->
+        BodyContent(Modifier.padding(innerPadding))
     }
+}
 
-    MaterialTheme(colors = colors) {
-        Text(text = "Hello $name!", color = MaterialTheme.colors.onPrimary)
+@Composable
+fun BodyContent(modifier: Modifier = Modifier) {
+    Column(modifier = modifier) {
+        Text(text = "Hello World!")
+        TextButton(onClick = { /* TODO: Handle click */ }) {
+            Text("Text Button")
+        }
+        Button(onClick = { /* TODO: Handle click */ }) {
+            Text("Button")
+        }
+        Card(
+            modifier = Modifier.padding(top = 8.dp),
+            elevation = 8.dp
+        ) {
+            Column(modifier = Modifier.padding(16.dp)) {
+                Text(text = "카드형 공간입니다..")
+                TextField(
+                    value = "",
+                    onValueChange = { /* TODO: Handle text change */ },
+                    label = { Text("입력하시오") },
+                    modifier = Modifier.padding(top = 8.dp)
+                )
+            }
+        }
+    }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun DefaultPreview() {
+    MyApp {
+        Greeting("디폴트프리뷰")
     }
 }
 
