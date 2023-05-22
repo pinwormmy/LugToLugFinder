@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
@@ -82,8 +83,10 @@ fun MyApp(content: @Composable () -> Unit) {
                 }
             }
         }
-    ) {
-        //
+    ) { paddingValues ->
+        Box(Modifier.padding(paddingValues)) {
+            //
+        }
     }
 
     MaterialTheme(colors = colors) {
