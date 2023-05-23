@@ -27,26 +27,27 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 
-enum class BottomNavigationItem(val route: String, val icon: ImageVector, val title: String) {
-    Search("search", Icons.Default.Search, "검색"),
-    Watch("watch", Icons.Default.Watch, "시계 보기"),
-    MyPage("mypage", Icons.Default.Person, "마이페이지")
+enum class BottomNavigationItem(val route: String, val icon: ImageVector) {
+    Search("search", Icons.Default.Search),
+    Watch("watch", Icons.Default.Watch),
+    MyPage("mypage", Icons.Default.Person)
 }
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MyApp {
-                // 여기에 원하는 컴포저블을 넣을 수 있습니다.
-            }
+            MyApp()
         }
     }
 }
 
 @Composable
-fun MyApp(content: @Composable () -> Unit) {
+fun MyApp() {
     val colors = if (isSystemInDarkTheme()) {
         Log.d("checkDarkMode","다크 모드 확인...")
         darkColors(
@@ -71,6 +72,8 @@ fun MyApp(content: @Composable () -> Unit) {
     )
     var selectedItem by remember { mutableStateOf(BottomNavigationItem.Search) }
 
+    val navController = rememberNavController()
+
     MaterialTheme(colors = colors) {
         Surface(color = MaterialTheme.colors.background) {
             Scaffold(
@@ -80,14 +83,21 @@ fun MyApp(content: @Composable () -> Unit) {
                             BottomNavigationItem(
                                 icon = { Icon(item.icon, contentDescription = null) },
                                 selected = selectedItem == item,
-                                onClick = { selectedItem = item }
+                                onClick = {
+                                    selectedItem = item
+                                    navController.navigate(item.route)
+                                }
                             )
                         }
                     }
                 }
             ) { paddingValues ->
                 Box(Modifier.padding(paddingValues)) {
-                    content()
+                    NavHost(navController, startDestination = BottomNavigationItem.Search.route) {
+                        composable(BottomNavigationItem.Search.route) { SearchScreen() }
+                        composable(BottomNavigationItem.Watch.route) { /* Watch Screen Composable */ }
+                        composable(BottomNavigationItem.MyPage.route) { /* MyPage Screen Composable */ }
+                    }
                 }
             }
         }
