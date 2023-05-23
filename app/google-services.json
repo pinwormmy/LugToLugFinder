@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1049622922602",
+    "project_id": "lug-to-lug-finder",
+    "storage_bucket": "lug-to-lug-finder.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1049622922602:android:00fcb6da778a85055a5113",
+        "android_client_info": {
+          "package_name": "eol.watch.lugtolugfinder"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1049622922602-c5mdctd99a9get4qh9baud8hb3ehq6og.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCbMnuxllieBFnXXWiqD3TmdB4EYb8-sSI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1049622922602-c5mdctd99a9get4qh9baud8hb3ehq6og.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
