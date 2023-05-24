@@ -1,7 +1,7 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
     ext {
-        compose_version = '1.2.0' // 현재의 최신 버전
+        compose_version = '1.2.0'
     }
 
     repositories {
@@ -12,7 +12,7 @@ buildscript {
     dependencies {
         classpath 'com.google.gms:google-services:4.3.15'
         classpath 'com.android.tools.build:gradle:8.0.1'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.10" // 머티리얼 디자인3 적용 위해서 다운그레이드
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.10"
     }
 }
 
