@@ -81,7 +81,7 @@ fun MyApp() {
                     BottomNavigation {
                         items.forEach { item ->
                             BottomNavigationItem(
-                                icon = { Icon(item.icon, contentDescription = null) },
+                                icon = { Icon(item.icon, contentDescription = null) }, // null값 수정필요
                                 selected = selectedItem == item,
                                 onClick = {
                                     selectedItem = item
