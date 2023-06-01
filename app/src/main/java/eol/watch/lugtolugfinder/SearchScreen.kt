@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
@@ -18,6 +19,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.google.android.gms.tasks.Task
@@ -69,26 +71,32 @@ fun SearchScreen() {
                 },
                 label = { Text("검색어를 입력하세요") },
                 modifier = Modifier.fillMaxWidth(),
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search)
-            )
-            LaunchedEffect(searchText) {
-                searchResults.value = searchWatchesInDatabase(searchText)
-            }
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+                keyboardActions = KeyboardActions(onSearch = {
+                    LocalSoftwareKeyboardController.current?.hide()
+                })
+            )1
         }
+    }
+
+    LaunchedEffect(searchText) {
+        searchResults.value = searchWatchesInDatabase(searchText)
     }
 }
 
 suspend fun searchWatchesInDatabase(searchText: String): List<Watch> = withContext(Dispatchers.IO) {
+    if (searchText.isBlank()) {
+        return@withContext emptyList<Watch>()
+    }
+
     val database = FirebaseDatabase.getInstance("https://lug-to-lug-finder-default-rtdb.asia-southeast1.firebasedatabase.app")
     val myRef = database.getReference("watches")
 
     val snapshot = myRef.get().await()
-    Log.d("Firebase", "Snapshot received: $snapshot")
-    val watches = snapshot.children.mapNotNull { it.getValue(Watch::class.java) }
-    Log.d("Firebase", "Watches parsed: $watches")
-    return@withContext watches.filter { it.brand.contains(searchText, ignoreCase = true) ||
-            it.name.contains(searchText, ignoreCase = true) ||
-            it.productNumber.contains(searchText, ignoreCase = true) }
+    return@withContext snapshot.children.mapNotNull { it.getValue(Watch::class.java) }
+        .filter { it.brand.contains(searchText, ignoreCase = true) ||
+                it.name.contains(searchText, ignoreCase = true) ||
+                it.productNumber.contains(searchText, ignoreCase = true) }
 }
 
 suspend fun <T> Task<T>.await(): T = suspendCoroutine { continuation ->
